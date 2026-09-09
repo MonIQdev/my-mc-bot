@@ -104,6 +104,32 @@ app.get('/', (req, res) => {
                 font-weight: 600;
                 color: #ffffff;
             }
+            .reboot-btn {
+                grid-column: span 2;
+                background: linear-gradient(135deg, #ff0055, #990033);
+                color: white;
+                border: none;
+                border-radius: 8px;
+                padding: 14px;
+                font-weight: bold;
+                font-size: 14px;
+                letter-spacing: 1px;
+                cursor: pointer;
+                text-transform: uppercase;
+                transition: all 0.2s ease;
+                box-shadow: 0 4px 15px rgba(255, 0, 85, 0.3);
+                margin-top: 10px;
+                text-align: center;
+                text-decoration: none;
+            }
+            .reboot-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(255, 0, 85, 0.5);
+                background: linear-gradient(135deg, #ff3377, #ff0055);
+            }
+            .reboot-btn:active {
+                transform: translateY(1px);
+            }
             .footer {
                 text-align: center;
                 margin-top: 30px;
@@ -146,6 +172,9 @@ app.get('/', (req, res) => {
                     <div class="card-title">Total Auto-Reboots</div>
                     <div class="card-value">${totalReboots}</div>
                 </div>
+                
+                <!-- 🔄 THE REBOOT BUTTON -->
+                <a href="/reboot" class="reboot-btn">⚡ Force Core Reboot</a>
             </div>
             
             <div class="card" style="margin-top: 15px; grid-column: span 2;">
@@ -161,6 +190,26 @@ app.get('/', (req, res) => {
     </html>
   `);
 });
+
+// ⚡ REBOOT TRIGGER BACKEND
+app.get('/reboot', (req, res) => {
+  res.send(`
+    <body style="background:#0a0b10; color:white; font-family:sans-serif; display:flex; justify-content:center; align-items:center; height:100vh;">
+      <div style="text-align:center;">
+        <h2 style="color:#ff0055;">🔄 REBOOT COMMAND ISSUED</h2>
+        <p>Killing active node worker process. Render will restore connection in ~30 seconds.</p>
+        <p>Redirecting back to dashboard...</p>
+        <script>setTimeout(() => { window.location.href = '/'; }, 5000);</script>
+      </div>
+    </body>
+  `);
+  
+  console.log("⚠️ Manual reboot trigger clicked from web interface. Stopping bot container...");
+  setTimeout(() => {
+    process.exit(1); // Force-stops the code, triggering Render's automated cloud recovery
+  }, 1000);
+});
+
 app.listen(process.env.PORT || 3000);
 
 // 🤖 MINEFLAYER CLIENT MODULE
@@ -174,6 +223,11 @@ bot.on('spawn', () => {
   botStatus = "ONLINE";
   connectionTime = new Date().toLocaleTimeString();
   console.log('Bot successfully connected to MineStrator!');
+  
+  // ⚡ INSTANT LOGIN COMMAND
+  setTimeout(() => {
+    bot.chat('/login YourSecretPassword'); // 🔑 REPLACE 'YourSecretPassword' WITH THE EXACT PASSWORD YOU REGISTERED IN-GAME!
+  }, 2000);
 });
 
 bot.on('end', (reason) => {
@@ -181,5 +235,5 @@ bot.on('end', (reason) => {
   lastDisconnectReason = reason || "Connection dropped by server rules.";
   totalReboots++;
   console.log('Bot disconnected. Rebooting worker stream...');
-  process.exit(1); // Render reboots this automatically
+  process.exit(1); 
 });
