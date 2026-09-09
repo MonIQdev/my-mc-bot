@@ -216,7 +216,10 @@ app.listen(process.env.PORT || 3000);
 const bot = mineflayer.createBot({
   host: '91.197.6.134', 
   port: 24745,                           
-  username: 'StatueGuy'
+  username: 'StatueGuy',
+  auth: 'offline',             // Disable Microsoft auth for cracked servers
+  connectionTimeout: 60000,    // Bypasses the 1.21.11 network packet dropping bug
+  checkTimeoutInterval: 30000  // Keeps pipeline pipeline locked open
 });
 
 bot.on('spawn', () => {
