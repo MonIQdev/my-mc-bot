@@ -165,9 +165,9 @@ app.listen(process.env.PORT || 3000);
 
 // 🤖 MINEFLAYER CLIENT MODULE
 const bot = mineflayer.createBot({
-  host: 'YOUR_NEW_MINESTRATOR_IP_HERE', // 🟢 Put your MineStrator IP
+  host: '91.197.6.134:24745', // 🟢 Put your MineStrator IP
   port: 25565,                           // 🟢 Put your MineStrator Port number
-  username: 'AFK_Bot_247'
+  username: 'StatueGuy'
 });
 
 bot.on('spawn', () => {
