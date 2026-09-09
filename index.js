@@ -8,7 +8,7 @@ app.listen(process.env.PORT || 3000);
 
 // This is your actual Minecraft Robot
 const bot = mineflayer.createBot({
-  host: 'YOUR_SERVER_IP_HERE',    // 🟢 Delete this and put your Server IP
+  host: 'bosssmp.tkmc.net',    // 🟢 Delete this and put your Server IP
   port: 25565,                    // 🟢 Change this if your server port is different
   username: 'AFK_Bot_247'         // 🟢 Choose your robot's username
 });
