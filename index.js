@@ -136,7 +136,7 @@ app.get('/', (req, res) => {
                 </div>
                 <div class="card">
                     <div class="card-title">Bot Username</div>
-                    <div class="card-value">AFK_Bot_247</div>
+                    <div class="card-value">StatueGuy</div>
                 </div>
                 <div class="card">
                     <div class="card-title">Session Uptime</div>
@@ -165,8 +165,8 @@ app.listen(process.env.PORT || 3000);
 
 // 🤖 MINEFLAYER CLIENT MODULE
 const bot = mineflayer.createBot({
-  host: '91.197.6.134', // 🟢 Put your MineStrator IP
-  port: 25565,                           // 🟢 Put your MineStrator Port number
+  host: '91.197.6.134', 
+  port: 24745,                           
   username: 'StatueGuy'
 });
 
