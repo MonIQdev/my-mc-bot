@@ -223,11 +223,6 @@ bot.on('spawn', () => {
   botStatus = "ONLINE";
   connectionTime = new Date().toLocaleTimeString();
   console.log('Bot successfully connected to MineStrator!');
-  
-  // ⚡ INSTANT LOGIN COMMAND
-  setTimeout(() => {
-    bot.chat('/login YourSecretPassword'); // 🔑 REPLACE 'YourSecretPassword' WITH THE EXACT PASSWORD YOU REGISTERED IN-GAME!
-  }, 2000);
 });
 
 bot.on('end', (reason) => {
