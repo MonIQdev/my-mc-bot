@@ -206,7 +206,7 @@ app.get('/reboot', (req, res) => {
   
   console.log("⚠️ Manual reboot trigger clicked from web interface. Stopping bot container...");
   setTimeout(() => {
-    process.exit(1); // Force-stops the code, triggering Render's automated cloud recovery
+    process.exit(1); 
   }, 1000);
 });
 
@@ -217,15 +217,46 @@ const bot = mineflayer.createBot({
   host: '91.197.6.134', 
   port: 24745,                           
   username: 'StatueGuy',
-  auth: 'offline',             // Disable Microsoft auth for cracked servers
-  connectionTimeout: 60000,    // Bypasses the 1.21.11 network packet dropping bug
-  checkTimeoutInterval: 30000  // Keeps pipeline pipeline locked open
+  auth: 'offline',             // Disable premium auth check for cracked servers
+  version: '1.21.1'            // Force precise packet synchronization
 });
 
 bot.on('spawn', () => {
   botStatus = "ONLINE";
   connectionTime = new Date().toLocaleTimeString();
   console.log('Bot successfully connected to MineStrator!');
+});
+
+// 🧰 NATIVE GUI WINDOW AUTO-CLICKER FOR AUTHME
+bot.on('windowOpen', async (window) => {
+  console.log(`[GUI Tracker] AuthMe inventory menu popped up! Title: ${window.title}`);
+  
+  // Wait 1.5 seconds for packets to settle, then inspect inventory layout
+  setTimeout(async () => {
+    // Look through all available chest grid slots
+    const items = window.containerItems();
+    
+    // Fallback: If inventory is blank or items haven't fully loaded, click the very center slot (Slot 13)
+    if (items.length === 0) {
+      console.log("[GUI Tracker] No items found in menu container. Blind clicking center slot (13)...");
+      await bot.clickWindow(13, 0, 0);
+      return;
+    }
+
+    // Smart Scan: Look for any GUI item mentioning "Login", "Register", or "Confirm"
+    for (const item of items) {
+      const name = item.displayName ? item.displayName.toLowerCase() : "";
+      if (name.includes('log') || name.includes('reg') || name.includes('pass') || name.includes('confirm')) {
+        console.log(`[GUI Tracker] Found authentication node matching: ${item.displayName} on slot ${item.slot}`);
+        await bot.clickWindow(item.slot, 0, 0);
+        return;
+      }
+    }
+
+    // Default Action: Click the first item present in the layout
+    console.log(`[GUI Tracker] Triggering default slot activation command on slot: ${items[0].slot}`);
+    await bot.clickWindow(items[0].slot, 0, 0);
+  }, 1500);
 });
 
 bot.on('end', (reason) => {
